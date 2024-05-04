@@ -1,73 +1,57 @@
 import css from 'components/PhoneBook/index.module.css';
-import React, { Component } from 'react';
-import Filter from 'components/Filter';
-import ContactList from 'components/ContactList';
-import Form from 'components/Form';
+import React, { useEffect, useState } from 'react';
+import { Filter } from 'components/Filter';
+import { ContactList } from 'components/ContactList';
+import { Form } from 'components/Form';
 
-export default class PhoneBook extends Component {
-  state = {
-    contacts: [],
-    filter: '',
-  };
+function getSavedContacts() {
+  const string = localStorage.getItem('contacts');
+  const contacts = string ? JSON.parse(string) : [];
+  return contacts;
+}
 
-  componentDidMount() {
-    const string = localStorage.getItem('contacts');
-    const contacts = string ? JSON.parse(string) : [];
-    this.setState({ contacts: contacts });
-  }
+export const PhoneBook = () => {
+  const [contacts, setContacts] = useState(getSavedContacts());
+  const [filter, setFilter] = useState('');
 
-  componentDidUpdate(prevProps, prevState) {
-    localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-  }
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
-  handleSubmit = user => {
-    if (this.state.contacts.some(x => x.name === user.name)) {
+  const handleSubmit = user => {
+    if (contacts.some(x => x.name === user.name)) {
       alert(`${user.name} is already in contacts.`);
       return false;
     }
-    this.setState(prevState => {
-      return {
-        contacts: [...prevState.contacts, user],
-        filter: '',
-      };
-    });
+
+    setFilter('');
+    setContacts([...contacts, user]);
     return true;
   };
 
-  handleFilter = value => {
-    this.setState({ filter: value });
+  const handleFilter = value => {
+    setFilter(value);
   };
 
-  handleDelete = id => {
-    this.setState(prevState => {
-      return {
-        contacts: this.state.contacts.filter(x => x.id !== id),
-      };
-    });
+  const handleDelete = id => {
+    setContacts(contacts.filter(x => x.id !== id));
   };
 
-  getFilteredData() {
-    let filter = this.state.filter.toLowerCase().trim();
-    if (!filter) {
-      return this.state.contacts;
+  function getFilteredData() {
+    let stringFilter = filter.toLowerCase().trim();
+    if (!stringFilter) {
+      return contacts;
     }
-    return this.state.contacts.filter(el =>
-      el.name.toLowerCase().includes(filter)
-    );
+    return contacts.filter(el => el.name.toLowerCase().includes(stringFilter));
   }
 
-  render() {
-    return (
-      <div className={css.phonebook}>
-        <h1>Phonebook</h1>
-        <Form onSubmit={this.handleSubmit} />
-        <h2>Contacts</h2>
-        <Filter onChange={this.handleFilter} value={this.state.filter} />
-        <ContactList
-          contacts={this.getFilteredData()}
-          handleDelete={this.handleDelete}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div className={css.phonebook}>
+      <h1>Phonebook</h1>
+      <Form onSubmit={handleSubmit} />
+      <h2>Contacts</h2>
+      <Filter onChange={handleFilter} value={filter} />
+      <ContactList contacts={getFilteredData()} handleDelete={handleDelete} />
+    </div>
+  );
+};
