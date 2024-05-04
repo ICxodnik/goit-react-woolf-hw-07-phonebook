@@ -1,0 +1,19 @@
+.contact {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--light-color);
+    padding: 10px;
+}
+
+.contactList {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: flex-start;
+    max-height: calc(100hv - 450px);
+    overflow-y: scroll;
+}

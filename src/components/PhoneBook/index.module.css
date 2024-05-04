@@ -1,0 +1,11 @@
+.phonebook {
+    width: 300px;
+    height: calc(100vh - 60px);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: var(--box-shadow);
+    background-color: var(--background-color);
+    margin: auto;
+}
