@@ -7,7 +7,7 @@ export const ContactList = props => {
     <ul className={css.contactList}>
       {props.contacts.map((el, number) => (
         <li className={css.contact} key={el.id}>
-          <span>{++number}.</span>
+          <span>{number + 1}.</span>
           <Contact data={el} />
           <button onClick={() => props.handleDelete(el.id)}>Delete</button>
         </li>
