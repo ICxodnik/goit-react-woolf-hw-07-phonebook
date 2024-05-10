@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Filter } from 'components/Filter';
 import { ContactList } from 'components/ContactList';
 import { Form } from 'components/Form';
+import { useDispatch, useSelector } from 'react-redux';
 
 function getSavedContacts() {
   const string = localStorage.getItem('contacts');
@@ -11,8 +12,9 @@ function getSavedContacts() {
 }
 
 export const PhoneBook = () => {
-  const [contacts, setContacts] = useState(getSavedContacts());
-  const [filter, setFilter] = useState('');
+  const contacts = useSelector((state) => state.phoneBook.contacts)
+  const filter = useSelector((state) => state.phoneBook.filter)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
@@ -24,17 +26,17 @@ export const PhoneBook = () => {
       return false;
     }
 
-    setFilter('');
-    setContacts([...contacts, user]);
+    dispatch(addContact(user))
+    dispatch(setFilter(''))
     return true;
   };
 
   const handleFilter = value => {
-    setFilter(value);
+    dispatch(setFilter(value))
   };
 
   const handleDelete = id => {
-    setContacts(contacts.filter(x => x.id !== id));
+    dispatch(deleteContact(id))
   };
 
   function getFilteredData() {
