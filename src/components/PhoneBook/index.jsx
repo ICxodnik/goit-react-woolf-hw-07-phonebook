@@ -4,40 +4,42 @@ import { Filter } from 'components/Filter';
 import { ContactList } from 'components/ContactList';
 import { Form } from 'components/Form';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact, deleteContact, setFilter } from 'store/phoneBook.slice.ts'
-
-function getSavedContacts() {
-  const string = localStorage.getItem('contacts');
-  const contacts = string ? JSON.parse(string) : [];
-  return contacts;
-}
+import { operations, setFilter } from 'store/phoneBook.slice.ts';
+import {
+  getContacts,
+  getFilter,
+  getIsLoading,
+  getError,
+} from 'store/selectors';
 
 export const PhoneBook = () => {
-  const contacts = useSelector((state) => state.phoneBook.contacts)
-  const filter = useSelector((state) => state.phoneBook.filter)
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilter);
+  const isLoading = useSelector(getIsLoading);
+  const error = useSelector(getError);
+  const dispatch = useDispatch();
 
   const handleSubmit = user => {
-    if (contacts.some(x => x.name === user.name)) {
+    if (contacts.some(x => x.name.toLowerCase() === user.name.toLowerCase())) {
       alert(`${user.name} is already in contacts.`);
       return false;
     }
 
-    dispatch(addContact(user))
-    dispatch(setFilter(''))
+    dispatch(operations.addContact(user));
+    dispatch(setFilter(''));
     return true;
   };
 
+  useEffect(() => {
+    dispatch(operations.fetchContacts());
+  }, []);
+
   const handleFilter = value => {
-    dispatch(setFilter(value))
+    dispatch(setFilter(value));
   };
 
   const handleDelete = id => {
-    dispatch(deleteContact(id))
+    dispatch(operations.deleteContact(id));
   };
 
   function getFilteredData() {
