@@ -54,6 +54,28 @@ export const phoneBookSlice = createSlice({
       state.filter = action.payload;
     },
   },
+  extraReducers(builder) {
+    builder.addCase(fetchContacts.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(fetchContacts.fulfilled, (state, action) => {
+      state.items = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(addContact.fulfilled, (state, action) => {
+      state.items.push(action.payload);
+    });
+    builder.addCase(deleteContact.fulfilled, (state, action) => {
+      state.items = state.items.filter(item => item.id !== action.payload.id);
+    });
+    builder.addMatcher(
+      action => action.type.endsWith('/rejected'),
+      (state, action) => {
+        state.isLoading = false;
+        state.error = 'Something went wrong. Try again';
+      }
+    );
+  },
 });
 
 export const operations = { fetchContacts, addContact, deleteContact };
