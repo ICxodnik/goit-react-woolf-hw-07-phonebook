@@ -50,13 +50,22 @@ export const PhoneBook = () => {
     return contacts.filter(el => el.name.toLowerCase().includes(stringFilter));
   }
 
+  if (error) {
+    return <b>Something went wrong: {error}</b>;
+  }
+
   return (
     <div className={css.phonebook}>
       <h1>Phonebook</h1>
       <Form onSubmit={handleSubmit} />
       <h2>Contacts</h2>
       <Filter onChange={handleFilter} value={filter} />
-      <ContactList contacts={getFilteredData()} handleDelete={handleDelete} />
+
+      {isLoading ? (
+        <b>Request in progress...</b>
+      ) : (
+        <ContactList contacts={getFilteredData()} handleDelete={handleDelete} />
+      )}
     </div>
   );
 };
