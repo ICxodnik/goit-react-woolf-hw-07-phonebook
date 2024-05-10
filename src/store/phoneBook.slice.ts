@@ -27,13 +27,13 @@ export const phoneBookSlice = createSlice({
     deleteContact: (state, action: PayloadAction<string>) => {
         state.contacts = state.contacts.filter(contact => contact.id !== action.payload)
     },
-    changeFilter: (state, action: PayloadAction<string>) => {
+    setFilter: (state, action: PayloadAction<string>) => {
         state.filter = action.payload
     },
   },
 })
 
-export const {  } = phoneBookSlice.actions
+export const { addContact, deleteContact, setFilter } = phoneBookSlice.actions
 
 export default phoneBookSlice.reducer
 

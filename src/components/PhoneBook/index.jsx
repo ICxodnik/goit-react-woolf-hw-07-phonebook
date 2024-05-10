@@ -1,9 +1,10 @@
 import css from 'components/PhoneBook/index.module.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Filter } from 'components/Filter';
 import { ContactList } from 'components/ContactList';
 import { Form } from 'components/Form';
 import { useDispatch, useSelector } from 'react-redux';
+import { addContact, deleteContact, setFilter } from 'store/phoneBook.slice.ts'
 
 function getSavedContacts() {
   const string = localStorage.getItem('contacts');
