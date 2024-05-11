@@ -1,15 +1,25 @@
 import React from 'react';
 import { Contact } from 'components/Contact';
 import css from 'components/ContactList/index.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { operations } from 'store/phoneBook.slice.ts';
+import { getFilteredContacts } from 'store/selectors';
 
 export const ContactList = props => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(getFilteredContacts);
+
+  const handleDelete = id => {
+    dispatch(operations.deleteContact(id));
+  };
+
   return (
     <ul className={css.contactList}>
-      {props.contacts.map((el, number) => (
+      {contacts.map((el, number) => (
         <li className={css.contact} key={el.id}>
           <span>{number + 1}.</span>
           <Contact data={el} />
-          <button onClick={() => props.handleDelete(el.id)}>Delete</button>
+          <button onClick={() => handleDelete(el.id)}>Delete</button>
         </li>
       ))}
     </ul>
