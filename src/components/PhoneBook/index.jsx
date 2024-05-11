@@ -32,7 +32,7 @@ export const PhoneBook = () => {
 
   useEffect(() => {
     dispatch(operations.fetchContacts());
-  }, []);
+  }, [dispatch]);
 
   const handleFilter = value => {
     dispatch(setFilter(value));
